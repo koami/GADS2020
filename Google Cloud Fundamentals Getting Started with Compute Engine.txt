@@ -1,0 +1,78 @@
+# Google Cloud Fundamentals: Getting Started with Compute Engine
+
+## Create two virtual machines using the gcloud command line
+## As we can't create the first one with the interface as in the lab.
+
+1. Step 1: Create my-vm-1
+'''
+	gcloud compute instances create "my-vm-1" \
+	--machine-type "n1-standard-1" \
+	--image-project "debian-cloud" \
+	--image "debian-9-stretch-v20190213" \
+	--subnet "default" --tags http --zone us-central1-a
+'''
+	
+2. Step 2 : Create a firewall rule to allow traffic to the vm-1
+'''
+	gcloud compute firewall-rules create allow-http \
+	--direction=INGRESS --action=ALLOW --rules=tcp:80 \
+	--target-tags=http
+'''
+
+3. Step 3: Create my-vm-2
+'''
+	gcloud compute instances create "my-vm-2" \
+	--machine-type "n1-standard-1" \
+	--image-project "debian-cloud" \
+	--image "debian-9-stretch-v20190213" \
+	--subnet "default" 
+'''
+
+
+## Connect between my-vm-1 and my-vm-2
+1. Step 1: Get the private IPs of the vms
+
+'''
+	gcloud compute instances list
+'''
+
+2. Step 2: Connect to vm2 via ssh
+'''
+	gcloud compute ssh my-vm-2
+'''
+
+3. Step 3: Ping vm1
+''' 
+	ping -c 3 <ip_of_vm1>
+'''
+
+4. Step 4: Connect to vm1
+'''
+	ssh my-vm-1
+'''
+
+5. Step 5: Install ngnix
+''' 
+	sudo apt-get install nginx-light -y
+'''
+
+6. Step 6: Edit hope page
+'''
+	sudo sed 's/<h1>.*</h1>/\nHi from Koami/' /var/www/html/index.nginx-debian.html
+'''
+
+7. Step 7: Confirm the change on the page
+'''
+	curl http://localhost/
+'''
+
+8. Step 8: Confirm that my-vm-2 can reach the web server on my-vm-1
+'''
+	exit
+'''
+'''
+	ssh my-vm-2
+'''
+'''
+	curl hhtp://my-vm-1/
+'''

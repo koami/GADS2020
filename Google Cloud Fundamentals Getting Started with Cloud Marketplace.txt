@@ -1,0 +1,64 @@
+# Google Cloud Fundamentals Getting Started with Cloud Marketplace
+
+## Create a virtual machine using the gcloud command line
+## As we can't create one with the interface as in the lab.
+
+1. Step 1: Create lampstack-1
+'''
+	gcloud compute instances create "lampstack-1" \
+	--machine-type "n1-standard-1" \
+	--image-project "debian-cloud" \
+	--image "debian-9-stretch-v20190213" \
+	--subnet "default" --tags http --zone us-central1-a
+'''
+	
+2. Step 2 : Create a firewall rule to allow traffic to the vm
+'''
+	gcloud compute firewall-rules create allow-http \
+	--direction=INGRESS --action=ALLOW --rules=tcp:80 \
+	--target-tags=http
+'''
+
+
+## Install Apache, PHP and MySQL
+1. Step 1: Get the list of vms
+
+'''
+	gcloud compute instances list
+'''
+
+2. Step 2: Connect to my vm via ssh
+'''
+	gcloud compute ssh lampstack-1
+'''
+
+3. Step 3: Install Apache and PHP on my instance
+''' 
+	sudo apt-get update
+	sudo apt-get install apache2 php libapache2-mod-php
+	sudo apt-get install mysql-server php-mysql php-pear
+'''
+
+4. Step 4: Configure MySQL
+'''
+	sudo mysql_secure_installation
+'''
+
+
+## Verify my deployment
+1. Step 1: Go to bitnami directory
+'''
+	cd /opt/bitnami
+	ssh my-vm-1---
+'''
+
+2. Step 2: To copy the phpinfo.php script from the installation directory to a publicly accessible location
+''' 
+	sudo sh -c 'echo "<?php phpinfo(); ?>" > apache2/htdocs/phpinfo.php'
+	exit
+'''
+
+3. Step 3: Open the site
+''' 
+	curl http://[ip-of-my-vm]/phpinpho.php
+'''
